@@ -1,0 +1,50 @@
+가격 없어요ㅜ,ㅜ
+{
+  "books": [
+    {
+      "id": 1,
+      "title": "별빛 아래의 서점",
+      "author": "홍길동",
+      "content": "...",
+      "genre": "소설",
+      "publisher": "빛나는 서재",
+      "publicationYear": 2026,
+      "price": 15000,
+      "pages": 320,
+      "isbn": "x",
+      "coverImageUrl": "",
+      "createdAt": "2026-04-24T09:00:00.000Z",
+      "updatedAt": "2026-04-24T09:00:00.000Z"
+    },
+    {
+      "id": 2,
+      "title": "시간 여행자의 지도",
+      "author": "김철수",
+      "content": "...",
+      "genre": "SF",
+      "publisher": "미래문학",
+      "publicationYear": 2025,
+      "price": 18000,
+      "pages": 450,
+      "isbn": "xx",
+      "coverImageUrl": "",
+      "createdAt": "2026-05-01T10:00:00.000Z",
+      "updatedAt": "2026-05-01T10:00:00.000Z"
+    },
+    {
+      "id": 3,
+      "title": "요리의 정석",
+      "author": "이영희",
+      "content": "...",
+      "genre": "요리",
+      "publisher": "맛있는 책방",
+      "publicationYear": 2024,
+      "price": 25000,
+      "pages": 280,
+      "isbn": "xxx",
+      "coverImageUrl": "",
+      "createdAt": "2026-03-15T14:30:00.000Z",
+      "updatedAt": "2026-03-15T14:30:00.000Z"
+    }
+  ]
+}
