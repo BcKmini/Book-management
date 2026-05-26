@@ -5,6 +5,7 @@ import Home from './components/pages/Home';
 import BookListPage from './components/list/pages/BookListPage';
 import BookFormPage from './components/list/pages/BookFormPage';
 import BookCoverEditor from './components/edit/BookCoverEditor';
+import './css/global.css'
 
 function BookListRoute() {
   const navigate = useNavigate();
