@@ -86,7 +86,7 @@ Book-management/
 ### Requirements
 - npm
 - react-router-dom 
-- .env 파일에 OpenAI API KEY 입력
+- .env 파일에 VITE_OPENAI_API_KEY= 키 입력
 
 ### Installation
 ```sh
