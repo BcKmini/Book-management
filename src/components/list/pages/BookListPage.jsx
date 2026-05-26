@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar'
 import BookCard from '../components/BookCard'
 import BookListItem from '../components/BookListItem'
 
-const API = 'http://localhost:5000/books'
+const API = 'http://localhost:3000/books'
 const FAVORITES = '즐겨찾기'
 
 function readFavoriteIds() {
@@ -166,6 +166,9 @@ export default function BookListPage({ onClickNew, onClickBook }) {
   const [query, setQuery] = useState('')
   const [view, setView] = useState('grid')
   const [favoriteIds, setFavoriteIds] = useState(() => readFavoriteIds())
+  const [sortBy, setSortBy] = useState('register');// 어떤 기준으로 정렬할 것인가?
+
+
 
   useEffect(() => {
     const load = async () => {
@@ -221,6 +224,20 @@ export default function BookListPage({ onClickNew, onClickBook }) {
     return genreOk && queryOk
   })
 
+//////필터링 결과에 정렬 적용 
+  const sortedAndFiltered=[...filtered].sort((a,b)=>{
+    if(sortBy==='title'){//1. 제목순 
+      return a.title.localeCompare(b.title,'ko')
+    }
+    if(sortBy==='price'){//2. 가격순
+      return (a.price||0)-(b.price||0)
+    }
+    return b.id-a.id//3. 등록 id순
+  })
+//////
+
+
+
   return (
     <div style={styles.shell}>
       <Sidebar
@@ -246,14 +263,16 @@ export default function BookListPage({ onClickNew, onClickBook }) {
             />
           </div>
         </div>
-
+        {/*filtered=> sortedAndFiltered 로 변경*/}
         <div style={styles.subbar}>
           <div style={styles.subLeft}>
-            <span style={styles.cnt}>총 {filtered.length}권</span>
-            <select style={styles.sortSelect}>
-              <option>등록일순</option>
-              <option>제목순</option>
-              <option>가격순</option>
+            <span style={styles.cnt}>총 {sortedAndFiltered.length}권</span>
+            <select style={styles.sortSelect}
+            value={sortBy}
+            onChange={(e)=>setSortBy(e.target.value)}>
+              <option value="register">등록일순</option>
+              <option value="title">제목순</option>
+              <option value="price">가격순</option>
             </select>
           </div>
           <div style={styles.toggleWrap}>
@@ -273,17 +292,19 @@ export default function BookListPage({ onClickNew, onClickBook }) {
             </button>
           </div>
         </div>
+        
 
         <div style={styles.content}>
           {loading && <div style={styles.loading}>불러오는 중...</div>}
           {error && (
             <div style={styles.error}>
               오류: {error}
-              <br />
+              
+
               json-server가 실행 중인지 확인하세요.
             </div>
           )}
-          {!loading && !error && filtered.length === 0 && (
+          {!loading && !error && sortedAndFiltered.length === 0 && (
             <div style={styles.empty}>
               <i className="ti ti-book-off" style={{ fontSize: 32, display: 'block', marginBottom: 10 }} />
               {genre === FAVORITES ? '즐겨찾기한 도서가 없습니다.' : '해당 도서가 없습니다.'}
@@ -292,7 +313,7 @@ export default function BookListPage({ onClickNew, onClickBook }) {
 
           {!loading && !error && view === 'grid' && (
             <div style={styles.gridArea}>
-              {filtered.map((book, i) => (
+              {sortedAndFiltered.map((book, i) => (
                 <BookCard
                   key={book.id}
                   book={book}
@@ -306,7 +327,7 @@ export default function BookListPage({ onClickNew, onClickBook }) {
 
           {!loading && !error && view === 'list' && (
             <div>
-              {filtered.map((book, i) => (
+              {sortedAndFiltered.map((book, i) => (
                 <BookListItem
                   key={book.id}
                   book={book}
@@ -322,3 +343,4 @@ export default function BookListPage({ onClickNew, onClickBook }) {
     </div>
   )
 }
+ 
