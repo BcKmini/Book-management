@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import BookCard from '../components/BookCard'
 import BookListItem from '../components/BookListItem'
@@ -145,14 +146,14 @@ const styles = {
 }
 
 export default function BookListPage({ onClickNew }) {
+  const [searchParams] = useSearchParams()
   const [books, setBooks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [genre, setGenre] = useState('전체')
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(searchParams.get('search') || '')
   const [view, setView] = useState('grid')
 
-  // ── GET /books ──
   useEffect(() => {
     const load = async () => {
       try {
@@ -170,7 +171,6 @@ export default function BookListPage({ onClickNew }) {
     load()
   }, [])
 
-  // ── DELETE /books/:id ──
   const handleDelete = async (id) => {
     if (!window.confirm('정말 삭제하시겠습니까?')) return
     await fetch(`${API}/${id}`, { method: 'DELETE' })
@@ -195,7 +195,6 @@ export default function BookListPage({ onClickNew }) {
       />
 
       <div style={styles.main}>
-        {/* 상단바 */}
         <div style={styles.topbar}>
           <span style={styles.title}>
             {genre === '전체' ? '전체 도서' : genre}
@@ -212,7 +211,6 @@ export default function BookListPage({ onClickNew }) {
           </div>
         </div>
 
-        {/* 서브바 */}
         <div style={styles.subbar}>
           <div style={styles.subLeft}>
             <span style={styles.cnt}>총 {filtered.length}권</span>
@@ -240,7 +238,6 @@ export default function BookListPage({ onClickNew }) {
           </div>
         </div>
 
-        {/* 콘텐츠 */}
         <div style={styles.content}>
           {loading && <div style={styles.loading}>불러오는 중...</div>}
           {error && <div style={styles.error}>오류: {error}<br />json-server가 실행 중인지 확인하세요.</div>}
