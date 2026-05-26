@@ -3,7 +3,7 @@ import Sidebar from '../components/Sidebar'
 import BookCard from '../components/BookCard'
 import BookListItem from '../components/BookListItem'
 
-const API = 'http://localhost:3000/books'
+const API = 'http://localhost:5000/books'
 const FAVORITES = '즐겨찾기'
 
 function readFavoriteIds() {
@@ -224,17 +224,17 @@ export default function BookListPage({ onClickNew, onClickBook }) {
     return genreOk && queryOk
   })
 
-//////필터링 결과에 정렬 적용 
-  const sortedAndFiltered=[...filtered].sort((a,b)=>{
-    if(sortBy==='title'){//1. 제목순 
-      return a.title.localeCompare(b.title,'ko')
+  //////필터링 결과에 정렬 적용 
+  const sortedAndFiltered = [...filtered].sort((a, b) => {
+    if (sortBy === 'title') {//1. 제목순 
+      return a.title.localeCompare(b.title, 'ko')
     }
-    if(sortBy==='price'){//2. 가격순
-      return (a.price||0)-(b.price||0)
+    if (sortBy === 'price') {//2. 가격순
+      return (a.price || 0) - (b.price || 0)
     }
-    return b.id-a.id//3. 등록 id순
+    return b.id - a.id//3. 등록 id순
   })
-//////
+  //////
 
 
 
@@ -268,8 +268,8 @@ export default function BookListPage({ onClickNew, onClickBook }) {
           <div style={styles.subLeft}>
             <span style={styles.cnt}>총 {sortedAndFiltered.length}권</span>
             <select style={styles.sortSelect}
-            value={sortBy}
-            onChange={(e)=>setSortBy(e.target.value)}>
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}>
               <option value="register">등록일순</option>
               <option value="title">제목순</option>
               <option value="price">가격순</option>
@@ -292,14 +292,14 @@ export default function BookListPage({ onClickNew, onClickBook }) {
             </button>
           </div>
         </div>
-        
+
 
         <div style={styles.content}>
           {loading && <div style={styles.loading}>불러오는 중...</div>}
           {error && (
             <div style={styles.error}>
               오류: {error}
-              
+
 
               json-server가 실행 중인지 확인하세요.
             </div>
@@ -343,4 +343,3 @@ export default function BookListPage({ onClickNew, onClickBook }) {
     </div>
   )
 }
- 
