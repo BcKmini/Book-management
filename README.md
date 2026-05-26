@@ -40,8 +40,29 @@ $ npm run dev
 ```
 ```
 
-## 5. 화면 구성
+## 5. API 엔드포인트
+- <b>도서 CRUD</b>
 
-## 6. 페이지 별 기능
+|API 이름              |유형    |REST API                                                            |설명                                                                                                                                         |
+|--------------------|------|--------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
+|도서 등록               |POST  |[http://localhost:3000/books](http://localhost:3000/books)          |필수: title·author·content. 초기값 자동 세팅: viewCount:0, lastViewedAt:null, coverImageUrl:"". createdAt·updatedAt은 new Date().toISOString() 프론트 세팅|
+|도서 수정               |PATCH |[http://localhost:3000/books/{id}](http://localhost:3000/books/:id) |변경된 필드만 body에 담아 전송함 (PUT 사용 금지). 수정 폼에 기존 정보 자동 불러오기, updatedAt 동시 갱신함. ...spread 3패턴으로 불변성 유지함.                                          |
+|도서 삭제               |DELETE|[http://localhost:3000/books/{id}](http://localhost:3000/books/:id) |삭제 전 window.confirm으로 사용자 확인 화면 표시함. 성공 시 목록 state에서 해당 항목 제거 후 목록 화면으로 전환함. 응답 본문 없음 (200/204 상태만 확인).                                    |
+|도서 상세 조회            |GET   |[http://localhost:3000/books/{id}](http://localhost:3000/books/{id})|도서 단건 조회. 조회 직후 viewCount +1 PATCH 호출                                                                                                      |
+|조회수 증가              |PATCH |[http://localhost:3000/books/{id}](http://localhost:3000/books/{id})|body: { viewCount: prev+1} 조회수 프론트 계산                                                                                                      |
+|도서 목록 조회 + 장르 필터+ 정렬|GET   |[http://localhost:3000/books](http://localhost:3000/books)          |전체 목록 1회 GET 후 프론트에서 Array.filter로 장르 필터, Array.sort로 최신순·제목순·가격순·인기순 정렬 처리. 사이드바 카운트도 동일 데이터로 계산 — 별도 엔드포인트 불필요                           |
 
-## 7. 추가 사항
+<br>
+
+- <b>AI 표지 생성</b>
+
+|API 이름     |유형   |REST API                                                                                    |설명                                                                                                                          |
+|-----------|-----|--------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+|AI 표지 3종 생성|POST |[https://api.openai.com/v1/images/generations](https://api.openai.com/v1/images/generations)|3종 미리보기 중 사용자가 선택한 1개만 coverImageUrl에 저장. updatedAt 동시 갱신. 저장 전 취소 시 원복 가능                                                  |
+|AI 표지 선택 저장|PATCH|[http://localhost:3000/books/{id}](http://localhost:3000/books/{id})                        |n:3으로 3종 동시 생성. 사용자 직접 입력 프롬프트 + title·content 자동 보완. data[0~2].b64_json → Data URL 변환 후 3종 미리보기 UI 표시. 401/429/500 에러 처리 필수|
+  
+## 6. 화면 구성
+
+## 7. 페이지 별 기능
+
+## 8. 추가 사항
