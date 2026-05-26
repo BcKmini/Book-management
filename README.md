@@ -65,9 +65,9 @@ graph TD
 ## 🚀 설치 및 실행
 
 ### Requirements
-- NPM
+- npm
 - react-router-dom 
-- .env 파일에 OPEN AI API 입력
+- .env 파일에 OpenAI API KEY 입력
 
 ### Installation
 ```
@@ -93,15 +93,15 @@ $ npm run dev
 
 |구분|API 이름   |유형    |REST API   |
 |--|---------|------|-----------|
-|조회|도서 조회    |GET   |/books     |
-|등록|도서 등록    |POST  |/books     |
-|수정|도서 수정    |PATCH |/books/{id}|
-|삭제|도서 삭제    |DELETE|/books/{id}|
-|조회|도서 상세 조회 |GET   |/books/{id}|
-|조회|도서 조회수 증가|GET   |/books/{id}|
-|등록|AI 표지 생성 |POST  |/v1/images/generations|
-|수정|AI 표지 저장 |PATCH |/books/{id}|
-|수정|AI 표지 수정 |PATCH |/books/{id}/cover-editor|
+|조회|도서 조회    |GET   |`/books`     |
+|등록|도서 등록    |POST  |`/books`     |
+|수정|도서 수정    |PATCH |`/books/{id}`|
+|삭제|도서 삭제    |DELETE|`/books/{id}`|
+|조회|도서 상세 조회 |GET   |`/books/{id}`|
+|조회|도서 조회수 증가|GET   |`/books/{id}`|
+|등록|AI 표지 생성 |POST  |`/v1/images/generations`|
+|수정|AI 표지 저장 |PATCH |`/books/{id}`|
+|수정|AI 표지 수정 |PATCH |`/books/{id}/cover-editor`|
   
 <br>
 
