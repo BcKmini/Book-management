@@ -57,7 +57,26 @@ graph TD
 <br>
 
 ## 📂 프로젝트 구조
-```
+
+```text
+Book-management/
+├── public/         # 정적 파일 (파비콘, 아이콘 등)
+├── src/
+│   ├── assets/     # 이미지 및 UI 에셋
+│   ├── components/ # 기능 및 페이지별 UI 컴포넌트
+│   │   ├── common/ # 공통 컴포넌트 (Header)
+│   │   ├── detail/ # 도서 상세 정보 영역
+│   │   ├── edit/   # 도서 및 AI 표지 에디터 영역
+│   │   ├── list/   # 도서 목록 렌더링 및 사이드바 영역
+│   │   └── main/   # 메인 화면 및 검색바 영역
+│   ├── pages/      # 라우팅되는 최상위 페이지 (Home, BookList 등)
+│   ├── util/       # 공통 유틸리티 (bookCoverService)
+│   ├── App.jsx     # 메인 라우터 및 상태 관리
+│   └── main.jsx    # React 진입점
+├── .env            # 환경 변수 (API 키 설정)
+├── db.json         # 백엔드 Mock 데이터 (json-server)
+├── package.json    # 프로젝트 의존성 라이브러리 명세
+└── README.md       # 프로젝트 소개 문서
 ```
 
 <br>
@@ -70,18 +89,18 @@ graph TD
 - .env 파일에 OpenAI API KEY 입력
 
 ### Installation
-```
+```sh
 $ git clone https://github.com/BcKmini/Book-management.git
 $ cd Book-management
 ```
 
 ### Backend
-```
+```sh
 $ npx json-server db.json --port 5000
 ```
 
 ### Frontend
-```
+```sh
 $ npm install
 $ npm install react-router-dom
 $ npm run dev
