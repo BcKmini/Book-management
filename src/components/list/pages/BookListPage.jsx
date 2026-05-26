@@ -170,6 +170,13 @@ export default function BookListPage({ onClickNew }) {
     load()
   }, [])
 
+  // ── DELETE /books/:id ──
+  const handleDelete = async (id) => {
+    if (!window.confirm('정말 삭제하시겠습니까?')) return
+    await fetch(`${API}/${id}`, { method: 'DELETE' })
+    setBooks((prev) => prev.filter((b) => b.id !== id))
+  }
+
   const filtered = books.filter((b) => {
     const genreOk = genre === '전체' || b.genre === genre
     const queryOk =
@@ -185,7 +192,6 @@ export default function BookListPage({ onClickNew }) {
         genre={genre}
         books={books}
         onSelectGenre={setGenre}
-        onClickNew={onClickNew}
       />
 
       <div style={styles.main}>
@@ -252,6 +258,7 @@ export default function BookListPage({ onClickNew }) {
                   key={book.id}
                   book={book}
                   rank={i + 1}
+                  onDelete={() => handleDelete(book.id)}
                 />
               ))}
             </div>
@@ -264,6 +271,7 @@ export default function BookListPage({ onClickNew }) {
                   key={book.id}
                   book={book}
                   rank={i + 1}
+                  onDelete={() => handleDelete(book.id)}
                 />
               ))}
             </div>
