@@ -6,7 +6,9 @@ KT AIVLE School AI 트랙 미니 프로젝트 4차 FrontEnd
 - 책을 사랑하는 사람이라면 누구나 간편하게 이용할 수 있도록 사용자 편의 UI를 제공합니다.
 - 기존 플랫폼과 달리 작가의 감성과 이야기가 그대로 반영될 수 있는 AI 표지 제작을 지원합니다.
 
-## 🗺️ 아키텍처 및 플로우 차트
+<br>
+
+## 🗺️ 시스템 아키텍처
 
 ```mermaid
 graph TD
@@ -21,6 +23,7 @@ graph TD
     Client -- "4. 도서 정보 + 이미지 URL<br>최종 저장 요청 (POST/PATCH)" --> Server
     Server -- "5. 저장 완료 및 데이터 응답" --> Client
 ```
+<br>
 
 ## ✨ 주요 기능
 ### 🎨 원하는 분위기의 AI 표지 생성 기능
@@ -39,6 +42,8 @@ graph TD
 - 메인 화면에서 조회수가 높은 순으로 인기 도서 랭킹 제공
 - 메인 화면에서 출판일자 최신 순으로 신작 랭킹 제공
 
+<br>
+
 ## 🛠 기술 스택
 ### Environment
 <img src="https://img.shields.io/badge/VISUAL STUDIO CODE-181717?style=for-the-badge&logo=none&logoColor=white"> <img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"> <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
@@ -49,9 +54,13 @@ graph TD
 ### Communication
 <img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"> <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"> <img src="https://img.shields.io/badge/zoom-0B5CFF?style=for-the-badge&logo=zoom&logoColor=white"> <img src="https://img.shields.io/badge/Microsoft Teams-181717?style=for-the-badge&logo=none&logoColor=white">
 
+<br>
+
 ## 📂 프로젝트 구조
 ```
 ```
+
+<br>
 
 ## 🚀 설치 및 실행
 
@@ -75,6 +84,8 @@ $ npm install
 $ npm run dev
 ```
 
+<br>
+
 ## 🔌 API 엔드포인트
 
 |구분|API 이름   |유형    |REST API   |
@@ -88,6 +99,7 @@ $ npm run dev
 |등록|AI 표지 생성 |POST  |           |
 |수정|AI 표지 저장 |PATCH |/books/{id}|
   
+<br>
 
 ## 🖼️ 화면 구성
 
@@ -101,6 +113,8 @@ $ npm run dev
 |도서 정보 수정|AI 표지 수정|
 |🖼️        |🖼️        |
 |설명        |설명        |
+
+<br>
 
 ## 👥 팀원 및 R&R
 
