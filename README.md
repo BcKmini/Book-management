@@ -66,7 +66,9 @@ graph TD
 
 ### Requirements
 - NPM
-- 
+- react-router-dom 
+- .env 파일에 OPEN AI API 입력
+
 ### Installation
 ```
 $ git clone https://github.com/BcKmini/Book-management.git
@@ -75,12 +77,13 @@ $ cd Book-management
 
 ### Backend
 ```
-$ npx json-server --watch db.json
+$ npx json-server db.json --port 5000
 ```
 
 ### Frontend
 ```
 $ npm install
+$ npm install react-router-dom
 $ npm run dev
 ```
 
@@ -96,8 +99,9 @@ $ npm run dev
 |삭제|도서 삭제    |DELETE|/books/{id}|
 |조회|도서 상세 조회 |GET   |/books/{id}|
 |조회|도서 조회수 증가|GET   |/books/{id}|
-|등록|AI 표지 생성 |POST  |           |
+|등록|AI 표지 생성 |POST  |/v1/images/generations|
 |수정|AI 표지 저장 |PATCH |/books/{id}|
+|수정|AI 표지 수정 |PATCH |/books/{id}/cover-editor|
   
 <br>
 
