@@ -70,7 +70,7 @@ const BookSection = ({ onBookClick }) => {
             className={activeTab === 'ranking' ? styles.activeTab : styles.tab}
             onClick={() => setActiveTab('ranking')}
           >
-            도서 랭킹
+            도서 랭킹 
           </button>
           <button
             className={activeTab === 'new' ? styles.activeTab : styles.tab}

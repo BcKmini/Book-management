@@ -7,75 +7,11 @@ import {
   buildStructuredPrompt,
   generateBookCover,
 } from '../../../util/bookCoverService'
+import '../../../css/book-form.css';
 
 const API = 'http://localhost:5000/books'
 
 const GENRES = ['소설', '인문', '에세이', '경제/경영', 'IT/컴퓨터', '자기계발']
-
-const s = {
-  page: { display: 'flex', flexDirection: 'column', height: '100vh', background: '#eeece6' },
-  topbar: {
-    background: '#fff', borderBottom: '0.5px solid rgba(0,0,0,0.12)',
-    padding: '0 20px', height: 52,
-    display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0,
-  },
-  backBtn: {
-    display: 'flex', alignItems: 'center', gap: 5, fontSize: 13,
-    color: '#6b6b67', background: 'none', border: 'none', cursor: 'pointer',
-  },
-  inner: { flex: 1, overflow: 'auto', padding: 24 },
-  wrap: { maxWidth: 680, margin: '0 auto' },
-  pageTitle: { fontSize: 18, fontWeight: 500, color: '#1a1a18', marginBottom: 6 },
-  pageSub: { fontSize: 13, color: '#6b6b67', marginBottom: 20 },
-  card: {
-    background: '#fff', border: '0.5px solid rgba(0,0,0,0.12)',
-    borderRadius: 12, padding: 24, marginBottom: 14,
-  },
-  sectionTitle: {
-    fontSize: 13, fontWeight: 500, color: '#6b6b67',
-    marginBottom: 16, display: 'flex', alignItems: 'center', gap: 6,
-  },
-  formGroup: { marginBottom: 14 },
-  label: {
-    fontSize: 12, color: '#6b6b67',
-    display: 'block', marginBottom: 5,
-  },
-  req: { color: '#e74c3c' },
-  input: (err) => ({
-    width: '100%', padding: '8px 12px',
-    border: `0.5px solid ${err ? '#e74c3c' : 'rgba(0,0,0,0.22)'}`,
-    borderRadius: 8, fontSize: 13, background: '#fff', color: '#1a1a18', outline: 'none',
-  }),
-  textarea: (err) => ({
-    width: '100%', padding: '8px 12px',
-    border: `0.5px solid ${err ? '#e74c3c' : 'rgba(0,0,0,0.22)'}`,
-    borderRadius: 8, fontSize: 13, background: '#fff', color: '#1a1a18',
-    minHeight: 110, resize: 'vertical', lineHeight: 1.6, outline: 'none',
-  }),
-  select: {
-    width: '100%', padding: '8px 12px',
-    border: '0.5px solid rgba(0,0,0,0.22)',
-    borderRadius: 8, fontSize: 13, background: '#fff', color: '#1a1a18', outline: 'none',
-  },
-  errMsg: { fontSize: 11, color: '#e74c3c', marginTop: 4, display: 'flex', alignItems: 'center', gap: 3 },
-  charCount: { fontSize: 11, color: '#6b6b67', textAlign: 'right', marginTop: 3 },
-  row: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 },
-  foot: { display: 'flex', justifyContent: 'flex-end', gap: 8 },
-  cancelBtn: {
-    fontSize: 13, padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
-    border: '0.5px solid rgba(0,0,0,0.22)', background: '#fff', color: '#1a1a18',
-  },
-  saveBtn: {
-    display: 'flex', alignItems: 'center', gap: 5,
-    fontSize: 13, fontWeight: 500, padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
-    background: '#1a1a18', color: '#fff', border: 'none',
-  },
-  banner: {
-    background: '#fef9e7', border: '0.5px solid #f0c040',
-    borderRadius: 8, padding: '10px 14px', fontSize: 13, color: '#7d6608',
-    display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14,
-  },
-}
 
 export default function BookFormPage({ mode, id, onBack, onSaved }) {
   const isEdit = mode === 'edit'
@@ -94,7 +30,6 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
 
-  // 수정 모드: 기존 데이터 로딩
   useEffect(() => {
     if (!isEdit) return
     const load = async () => {
@@ -197,112 +132,107 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
     onSaved()
   }
 
-  if (loading) return <div style={{ padding: 40, color: '#6b6b67' }}>불러오는 중...</div>
+  if (loading) return <div className='loading'>불러오는 중...</div>
 
   return (
-    <div style={s.page}>
-      <div style={s.topbar}>
-        <button style={s.backBtn} onClick={onBack}>
+    <div className='page'>
+      <div className='topbar'>
+        <button className='back-btn' onClick={onBack}>
           <i className="ti ti-arrow-left" /> {isEdit ? '상세 페이지로' : '도서 목록으로'}
         </button>
         <div />
       </div>
 
-      <div style={s.inner}>
-        <div style={s.wrap}>
-          <div style={s.pageTitle}>{isEdit ? '도서 수정' : '새 도서 등록'}</div>
-          {isEdit && <div style={s.pageSub}>ID {id}</div>}
+      <div className='inner'>
+        <div className='wrap'>
+          <div className='page-title'>{isEdit ? '도서 수정' : '새 도서 등록'}</div>
+          {isEdit && <div className='page-sub'>ID {id}</div>}
 
           {isEdit && changed && (
-            <div style={s.banner}>
+            <div className='banner'>
               <i className="ti ti-info-circle" /> 변경된 내용이 있습니다. 저장하기 버튼을 눌러 반영하세요.
             </div>
           )}
 
-          {/* 기본 정보 */}
-          <div style={s.card}>
-            <div style={s.sectionTitle}>
+          <div className='card'>
+            <div className='section-title'>
               <i className="ti ti-info-circle" /> 기본 정보
               <span style={{ fontSize: 11, fontWeight: 400, marginLeft: 4, color: '#e74c3c' }}>* 필수</span>
             </div>
-            <div style={s.formGroup}>
-              <label style={s.label}>제목 <span style={s.req}>*</span></label>
-              <input style={s.input(errors.title)} value={form.title} onChange={(e) => set('title', e.target.value)} placeholder="도서 제목" />
-              {errors.title && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.title}</div>}
+
+            <div className="form-group">
+              <label className="label">제목 <span className="req">*</span></label>
+              <input className={`input ${errors.title ? 'error' : ''}`} value={form.title} onChange={(e) => set('title', e.target.value)} placeholder="도서 제목" />
+              {errors.title && <div className="err-msg"><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.title}</div>}
             </div>
-            <div style={s.row}>
-              <div>
-                <label style={s.label}>저자 <span style={s.req}>*</span></label>
-                <input style={s.input(errors.author)} value={form.author} onChange={(e) => set('author', e.target.value)} placeholder="저자명" />
-                {errors.author && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.author}</div>}
-              </div>
-              <div>
-                <label style={s.label}>장르</label>
-                <select style={s.select} value={form.genre} onChange={(e) => set('genre', e.target.value)}>
-                  <option value="">장르 선택</option>
-                  {GENRES.map((g) => <option key={g}>{g}</option>)}
-                </select>
+
+            <div className='row'>
+              <div className="form-group">
+                <label className="label">저자 <span className="req">*</span></label>
+                <input className={`input ${errors.author ? 'error' : ''}`} value={form.author} onChange={(e) => set('author', e.target.value)} placeholder="저자명" />
+                {errors.author && <div className="err-msg"><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.author}</div>}
               </div>
             </div>
-            <div style={s.formGroup}>
-              <label style={s.label}>
-                도서 내용 <span style={s.req}>*</span>
+
+            <div className="form-group">
+              <label className="label">장르</label>
+              <select className="select" value={form.genre} onChange={(e) => set('genre', e.target.value)}>
+                <option value="">장르 선택</option>
+                {GENRES.map((g) => <option key={g}>{g}</option>)}
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label className="label">
+                도서 내용 <span className="req">*</span>
                 <span style={{ fontWeight: 400, marginLeft: 4, color: '#6b6b67' }}>(AI 표지 생성에 활용됩니다)</span>
               </label>
-              <textarea
-                style={s.textarea(errors.content)}
-                value={form.content}
-                onChange={(e) => set('content', e.target.value)}
-                placeholder="줄거리, 주제, 핵심 내용을 입력하세요."
-                maxLength={500}
-              />
-              {errors.content && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.content}</div>}
-              <div style={s.charCount}>{form.content.length} / 500자</div>
+              <textarea className={`textarea ${errors.content ? 'error' : ''}`} value={form.content} onChange={(e) => set('content', e.target.value)} placeholder="줄거리, 주제, 핵심 내용을 입력하세요." maxLength={500} />
+              {errors.content && <div className="err-msg"><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.content}</div>}
+              <div className="char-count">{form.content.length} / 500자</div>
             </div>
           </div>
 
-          {/* 상세 정보 */}
-          <div style={s.card}>
-            <div style={s.sectionTitle}>
+          <div className='card'>
+            <div className='section-title'>
               <i className="ti ti-list-details" /> 상세 정보
               <span style={{ fontSize: 11, fontWeight: 400, marginLeft: 4 }}>(선택)</span>
             </div>
-            <div style={s.row}>
+            <div className="row">
               <div>
-                <label style={s.label}>출판사</label>
-                <input style={s.input()} value={form.publisher} onChange={(e) => set('publisher', e.target.value)} placeholder="출판사명" />
+                <label className='label'>출판사</label>
+                <input className="input" value={form.publisher} onChange={(e) => set('publisher', e.target.value)} placeholder="출판사명" />
               </div>
               <div>
-                <label style={s.label}>출판일</label>
-                <input style={s.input()} type="date" value={form.pubDate} onChange={(e) => set('pubDate', e.target.value)} />
+                <label className='label'>출판일</label>
+                <input className="input" type="date" value={form.pubDate} onChange={(e) => set('pubDate', e.target.value)} />
               </div>
             </div>
-            <div style={s.row}>
+            <div className="row">
               <div>
-                <label style={s.label}>가격 (원)</label>
-                <input style={s.input()} type="number" value={form.price} onChange={(e) => set('price', e.target.value)} placeholder="예: 16000" />
+                <label className='label'>가격 (원)</label>
+                <input className="input" type="number" value={form.price} onChange={(e) => set('price', e.target.value)} placeholder="예: 16000" />
               </div>
               <div>
-                <label style={s.label}>페이지 수</label>
-                <input style={s.input()} type="number" value={form.pages} onChange={(e) => set('pages', e.target.value)} placeholder="예: 280" />
+                <label className='label'>페이지 수</label>
+                <input className="input" type="number" value={form.pages} onChange={(e) => set('pages', e.target.value)} placeholder="예: 280" />
               </div>
             </div>
             <div>
-              <label style={s.label}>ISBN</label>
-              <input style={s.input()} value={form.isbn} onChange={(e) => set('isbn', e.target.value)} placeholder="13자리 ISBN" maxLength={13} />
+              <label className='label'>ISBN</label>
+              <input className="input" value={form.isbn} onChange={(e) => set('isbn', e.target.value)} placeholder="13자리 ISBN" maxLength={13} />
             </div>
           </div>
 
-          {/* AI 표지 생성 - 등록 모드 전용 */}
           {!isEdit && (
-            <div style={s.card}>
-              <div style={s.sectionTitle}>
+            <div className='card'>
+              <div className='section-title'>
                 <i className="ti ti-wand" /> AI 표지 생성
                 <span style={{ fontSize: 11, fontWeight: 400, marginLeft: 4 }}>(선택)</span>
               </div>
 
-              <div style={s.formGroup}>
-                <label style={s.label}>스타일</label>
+              <div className="form-group">
+                <label className="label">스타일</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {Object.keys(STYLE_PRESETS).map((key) => (
                     <button key={key} onClick={() => setAiOptions((p) => ({ ...p, style: key }))}
@@ -313,8 +243,8 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
                 </div>
               </div>
 
-              <div style={s.formGroup}>
-                <label style={s.label}>배경 / 조명</label>
+              <div className="form-group">
+                <label className="label">배경 / 조명</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center' }}>
                   {Object.keys(BACKGROUND_PRESETS).map((key) => (
                     <button key={key} onClick={() => setAiOptions((p) => ({ ...p, background: key }))}
@@ -332,8 +262,8 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
                 </div>
               </div>
 
-              <div style={s.formGroup}>
-                <label style={s.label}>타이포그래피</label>
+              <div className="form-group">
+                <label className="label">타이포그래피</label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {Object.keys(TYPOGRAPHY_PRESETS).map((key) => (
                     <button key={key} onClick={() => setAiOptions((p) => ({ ...p, typography: key }))}
@@ -344,9 +274,9 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
                 </div>
               </div>
 
-              <div style={s.formGroup}>
-                <label style={s.label}>프롬프트</label>
-                <textarea style={s.textarea(false)} placeholder="어떤 느낌의 표지를 원하시나요? 객체, 색감, 분위기 등을 자유롭게 적어주세요." value={aiPrompt} onChange={(e) => setAiPrompt(e.target.value)} />
+              <div className="form-group">
+                <label className="label">프롬프트</label>
+                <textarea className="textarea" placeholder="어떤 느낌의 표지를 원하시나요?" value={aiPrompt} onChange={(e) => setAiPrompt(e.target.value)} />
               </div>
 
               <button onClick={handleGenerate} disabled={isGenerating}
@@ -375,9 +305,9 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
             </div>
           )}
 
-          <div style={s.foot}>
-            <button style={s.cancelBtn} onClick={onBack}>취소</button>
-            <button style={s.saveBtn} onClick={handleSave}>
+          <div className='foot'>
+            <button className="cancel-btn" onClick={onBack}>취소</button>
+            <button className="save-btn" onClick={handleSave}>
               <i className="ti ti-check" /> {isEdit ? '저장하기' : '등록하기'}
             </button>
           </div>

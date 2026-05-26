@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import SearchBar from './SearchBar'
 import BookSection from './BookSection'
 
+
 const Main = () => {
   const navigate = useNavigate()
 

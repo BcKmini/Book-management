@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import BookCard from '../components/BookCard'
 import BookListItem from '../components/BookListItem'
+import styles from './BookListPage.module.css'
 
 const API = 'http://localhost:5000/books'
 const FAVORITES = '즐겨찾기'
@@ -16,28 +17,6 @@ function readFavoriteIds() {
     }
   }
   return ids
-}
-
-const styles = {
-  shell: { display: 'flex', height: '100vh', overflow: 'hidden' },
-  main: { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minWidth: 0, background: '#eeece6' },
-  topbar: { background: '#fff', borderBottom: '0.5px solid rgba(0,0,0,0.12)', padding: '0 18px', height: 52, display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 },
-  title: { fontSize: 15, fontWeight: 500, color: '#1a1a18', flex: 1 },
-  searchWrap: { position: 'relative' },
-  searchIcon: { position: 'absolute', left: 9, top: '50%', transform: 'translateY(-50%)', fontSize: 15, color: '#6b6b67', pointerEvents: 'none' },
-  searchInput: { padding: '7px 10px 7px 30px', border: '0.5px solid rgba(0,0,0,0.22)', borderRadius: 8, fontSize: 13, background: '#f5f5f4', color: '#1a1a18', width: 180, outline: 'none' },
-  subbar: { background: '#fff', borderBottom: '0.5px solid rgba(0,0,0,0.12)', padding: '0 18px', height: 42, display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 },
-  subLeft: { display: 'flex', alignItems: 'center', gap: 8 },
-  cnt: { fontSize: 12, color: '#6b6b67' },
-  sortSelect: { padding: '4px 8px', border: '0.5px solid rgba(0,0,0,0.22)', borderRadius: 8, fontSize: 12, background: '#fff', color: '#6b6b67', outline: 'none' },
-  toggleWrap: { display: 'flex', border: '0.5px solid rgba(0,0,0,0.22)', borderRadius: 8, overflow: 'hidden' },
-  toggleBtn: (active) => ({ width: 34, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', background: active ? '#f5f5f4' : 'none', border: 'none', borderRight: '0.5px solid rgba(0,0,0,0.22)', color: active ? '#1a1a18' : '#6b6b67', cursor: 'pointer' }),
-  toggleBtnLast: (active) => ({ width: 34, height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center', background: active ? '#f5f5f4' : 'none', border: 'none', color: active ? '#1a1a18' : '#6b6b67', cursor: 'pointer' }),
-  content: { flex: 1, overflowY: 'auto' },
-  gridArea: { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16, padding: 18 },
-  empty: { padding: 60, textAlign: 'center', color: '#6b6b67', fontSize: 13 },
-  loading: { padding: 40, textAlign: 'center', color: '#6b6b67', fontSize: 13 },
-  error: { padding: 40, textAlign: 'center', color: '#c0392b', fontSize: 13 },
 }
 
 export default function BookListPage({ onClickNew, onClickBook }) {
@@ -96,15 +75,15 @@ export default function BookListPage({ onClickNew, onClickBook }) {
   })
 
   return (
-    <div style={styles.shell}>
+    <div className={styles.shell}>
       <Sidebar genre={genre} books={books} favoriteIds={favoriteIds} onSelectGenre={setGenre} />
-      <div style={styles.main}>
-        <div style={styles.topbar}>
-          <span style={styles.title}>{genre === '전체' ? '전체 도서' : genre}</span>
-          <div style={styles.searchWrap}>
-            <i className="ti ti-search" style={styles.searchIcon} />
+      <div className={styles.main}>
+        <div className={styles.topbar}>
+          <span className={styles.title}>{genre === '전체' ? '전체 도서' : genre}</span>
+          <div className={styles.searchWrap}>
+            <i className={`ti ti-search ${styles.searchIcon}`} />
             <input
-              style={styles.searchInput}
+              className={styles.searchInput}
               type="text"
               placeholder="제목, 저자 검색"
               value={query}
@@ -113,36 +92,36 @@ export default function BookListPage({ onClickNew, onClickBook }) {
           </div>
         </div>
 
-        <div style={styles.subbar}>
-          <div style={styles.subLeft}>
-            <span style={styles.cnt}>총 {filtered.length}권</span>
-            <select style={styles.sortSelect}>
+        <div className={styles.subbar}>
+          <div className={styles.subLeft}>
+            <span className={styles.count}>총 {filtered.length}권</span>
+            <select className={styles.sortSelect}>
               <option>등록일순</option>
               <option>제목순</option>
               <option>가격순</option>
             </select>
           </div>
-          <div style={styles.toggleWrap}>
-            <button style={styles.toggleBtn(view === 'grid')} onClick={() => setView('grid')} title="격자 보기">
-              <i className="ti ti-layout-grid" style={{ fontSize: 16 }} />
+          <div className={styles.toggleWrap}>
+            <button className={`${styles.toggleBtn} ${view === 'grid' ? styles.toggleActive : ''}`} onClick={() => setView('grid')} title="크게 보기">
+              <i className={`ti ti-layout-grid ${styles.toggleIcon}`} />
             </button>
-            <button style={styles.toggleBtnLast(view === 'list')} onClick={() => setView('list')} title="목록 보기">
-              <i className="ti ti-menu-2" style={{ fontSize: 16 }} />
+            <button className={`${styles.toggleBtnLast} ${view === 'list' ? styles.toggleActive : ''}`} onClick={() => setView('list')} title="상세히 보기">
+              <i className={`ti ti-menu-2 ${styles.toggleIcon}`} />
             </button>
           </div>
         </div>
 
-        <div style={styles.content}>
-          {loading && <div style={styles.loading}>불러오는 중...</div>}
-          {error && <div style={styles.error}>오류: {error}<br />json-server가 실행 중인지 확인하세요.</div>}
+        <div className={styles.content}>
+          {loading && <div className={styles.loading}>불러오는 중...</div>}
+          {error && <div className={styles.error}>오류: {error}<br />json-server가 실행 중인지 확인하세요.</div>}
           {!loading && !error && filtered.length === 0 && (
-            <div style={styles.empty}>
-              <i className="ti ti-book-off" style={{ fontSize: 32, display: 'block', marginBottom: 10 }} />
+            <div className={styles.empty}>
+              <i className={`ti ti-book-off ${styles.emptyIcon}`} />
               {genre === FAVORITES ? '즐겨찾기한 도서가 없습니다.' : '해당 도서가 없습니다.'}
             </div>
           )}
           {!loading && !error && view === 'grid' && (
-            <div style={styles.gridArea}>
+            <div className={styles.gridArea}>
               {filtered.map((book, i) => (
                 <BookCard key={book.id} book={book} rank={i + 1} onClick={() => onClickBook?.(book)} onDelete={() => handleDelete(book.id)} />
               ))}
