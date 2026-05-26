@@ -83,7 +83,7 @@ const BookSection = () => {
             className={activeTab === 'ranking' ? styles.activeTab : styles.tab}
             onClick={() => setActiveTab('ranking')}
           >
-            도서 랭킹
+            도서랭킹 
           </button>
           <button 
             className={activeTab === 'new' ? styles.activeTab : styles.tab}
@@ -106,7 +106,7 @@ const BookSection = () => {
         <div className={styles.sliderWindow}>
           <div 
             className={styles.cardList}
-            style={{ transform: `translateX(calc(-${currentIndex} * (25% + 6px)))` }}
+            style={{ '--current-index': currentIndex }}
           >
             {currentBooks.map((book) => (
               <div key={book.id} className={styles.card}>
