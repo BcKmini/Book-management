@@ -1,6 +1,8 @@
 # 📖 도서 관리 시스템 README.MD
 KT AIVLE School AI 트랙 미니 프로젝트 4차 FrontEnd
 
+<img src="https://github.com/user-attachments/assets/c4527184-1e44-4688-a68f-12df8db1f4b9">
+
 ## 📢 프로젝트 소개
 - 누구나 작가가 되어 자유롭게 글을 집필하고 공개할 수 있는 창작 플랫폼입니다.
 - 책을 사랑하는 사람이라면 누구나 간편하게 이용할 수 있도록 사용자 편의 UI를 제공합니다.
