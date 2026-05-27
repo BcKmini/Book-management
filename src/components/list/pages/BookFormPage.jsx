@@ -9,7 +9,7 @@ import {
   generateBookCover,
 } from '../../../util/bookCoverService'
 
-const API = 'http://localhost:5000/books'
+const API = 'http://localhost:3000/books'
 
 const GENRES = ['소설', '인문', '에세이', '경제/경영', 'IT/컴퓨터', '자기계발']
 
@@ -81,6 +81,7 @@ const s = {
 export default function BookFormPage({ mode, id, onBack, onSaved }) {
   const isEdit = mode === 'edit'
 
+  //하나의 숫자로 묶어 다루기 
   const [form, setForm] = useState({
     title: '', author: '', content: '', genre: '',
     publisher: '', pubDate: '', price: '', pages: '', isbn: '',
@@ -89,32 +90,18 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
   const [changed, setChanged] = useState(false)
   const [loading, setLoading] = useState(isEdit)
 
-  const [aiOptions, setAiOptions] = useState({ style: '수채화', background: '베이지', lighting: '자연광', typography: '클래식 명조' })
-  
-  // 1. 모델과 퀄리티 상태 추가
-  const [apiConfig, setApiConfig] = useState({
-    model: 'gpt-image-2',
-    quality: 'Medium',
-  })
-
+  const [aiOptions, setAiOptions] = useState({ style: '수채화', background: '베이지', 
+    lighting: '자연광', typography: '클래식 명조' })
   const [aiPrompt, setAiPrompt] = useState('')
   const [generatedImages, setGeneratedImages] = useState([null, null, null])
   const [isGenerating, setIsGenerating] = useState(false)
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
 
-  // 2. 모델 변경 시 예외처리 핸들러 추가
-  const handleModelChange = (modelName) => {
-    setApiConfig((prev) => ({
-      model: modelName,
-      quality: modelName === 'dall-e-3' ? 'High' : prev.quality
-    }));
-  };
-
   // 수정 모드: 기존 데이터 로딩
   useEffect(() => {
     if (!isEdit) return
     const load = async () => {
-      try {
+      try {/////fetch
         const res = await fetch(`${API}/${id}`)
         const data = await res.json()
         setForm({
@@ -127,8 +114,11 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
           price: data.price || '',
           pages: data.pages || '',
           isbn: data.isbn || '',
-        })
-      } finally {
+        })      
+      }catch(err){
+        console.error('데이터를 불러오는 데 실패했습니다.', err)
+      } 
+      finally {
         setLoading(false)
       }
     }
@@ -136,8 +126,11 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
   }, [id, isEdit])
 
   const set = (key, val) => {
+    // 1. 기존의 객체 속성들을 불변성을 유지하며 복사
     setForm((prev) => ({ ...prev, [key]: val }))
-    setChanged(true)
+    // 2. 변경을 원하는 키값만 덮어쓰기
+    setChanged(true) 
+    // 값이 입력되면 해당 필드의 에러 메시지는 실시간으로 삭제
     if (errors[key]) setErrors((prev) => ({ ...prev, [key]: '' }))
   }
 
@@ -145,7 +138,25 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
     const e = {}
     if (!form.title.trim()) e.title = '제목은 필수 입력 항목입니다.'
     if (!form.author.trim()) e.author = '저자는 필수 입력 항목입니다.'
-    if (!form.content.trim()) e.content = '도서 내용은 필수 입력 항목입니다.'
+    if(!form.genre) e.genre='장르는 필수 입력 항목입니다.'
+    if (!form.content.trim()) {e.content = '도서 내용은 필수 입력 항목입니다.'
+    } else if (form.content.length>500){
+      //도서 내용 최대 500자 제한 
+      e.content='도서 내용은 500자까지 작성 가능합니다.'
+    }
+    //선택 항목 
+    if (form.price && Number(form.price) < 0) {
+      e.price = '가격은 0원 이상이어야 합니다.'
+    }
+    if (form.pages && Number(form.pages) <= 0) {
+      e.pages = '페이지 수는 1페이지 이상이어야 합니다.'
+    }
+    if (form.isbn && form.isbn.trim()) {
+      const cleanIsbn = form.isbn.replace(/[^0-9]/g, '') // 숫자만 추출
+      if (cleanIsbn.length !== 13) {
+        e.isbn='ISBN은 정확히 13자리 숫자여야 합니다.'
+      }
+    }
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -170,15 +181,10 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
         content: `[Book Story]: ${form.content} / [User Design Request]: ${aiPrompt}`,
       }
       const finalPrompt = buildStructuredPrompt(combinedInfo, aiOptions)
-      
-      // 3. 사이즈는 1024x1536으로 무조건 고정
-      const fixedSize = '1024x1536';
-      
-      // 4. 동적 모델 전달
       const newImages = await Promise.all([
-        generateBookCover(apiKey, finalPrompt, apiConfig.model, fixedSize),
-        generateBookCover(apiKey, finalPrompt, apiConfig.model, fixedSize),
-        generateBookCover(apiKey, finalPrompt, apiConfig.model, fixedSize),
+        generateBookCover(apiKey, finalPrompt),
+        generateBookCover(apiKey, finalPrompt),
+        generateBookCover(apiKey, finalPrompt),
       ])
       setGeneratedImages(newImages)
     } catch (error) {
@@ -192,6 +198,7 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
 
   const handleSave = async () => {
     if (!validate()) return
+    try{
     const now = new Date().toISOString()
     const coverImageUrl = (!isEdit && selectedImageIndex !== null)
       ? await compressImageDataUrl(generatedImages[selectedImageIndex])
@@ -204,6 +211,7 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
       ...(isEdit ? {} : { createdAt: now, coverImageUrl }),
     }
 
+    /////fetch
     const res = isEdit
       ? await fetch(`${API}/${id}`, {
         method: 'PATCH',
@@ -222,6 +230,11 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
     }
 
     onSaved()
+    }catch(error){
+      console.error(error)
+      alert('네트워크 전송 중 오류가 발생했습니다.')
+      
+    }
   }
 
   if (loading) return <div style={{ padding: 40, color: '#6b6b67' }}>불러오는 중...</div>
@@ -265,10 +278,11 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
               </div>
               <div>
                 <label style={s.label}>장르</label>
-                <select style={s.select} value={form.genre} onChange={(e) => set('genre', e.target.value)}>
+                <select style={s.input(errors.genre)} value={form.genre} onChange={(e) => set('genre', e.target.value)}>
                   <option value="">장르 선택</option>
                   {GENRES.map((g) => <option key={g}>{g}</option>)}
                 </select>
+                {errors.genre && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.genre}</div>}
               </div>
             </div>
             <div style={s.formGroup}>
@@ -307,16 +321,19 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
             <div style={s.row}>
               <div>
                 <label style={s.label}>가격 (원)</label>
-                <input style={s.input()} type="number" value={form.price} onChange={(e) => set('price', e.target.value)} placeholder="예: 16000" />
+                <input style={s.input(errors.price)} type="number" value={form.price} onChange={(e) => set('price', e.target.value)} placeholder="예: 16000" />
+                {errors.price && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.price}</div>}
               </div>
               <div>
                 <label style={s.label}>페이지 수</label>
-                <input style={s.input()} type="number" value={form.pages} onChange={(e) => set('pages', e.target.value)} placeholder="예: 280" />
+                <input style={s.input(errors.pages)} type="number" value={form.pages} onChange={(e) => set('pages', e.target.value)} placeholder="예: 280" />
+                {errors.pages && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.pages}</div>}
               </div>
             </div>
             <div>
               <label style={s.label}>ISBN</label>
-              <input style={s.input()} value={form.isbn} onChange={(e) => set('isbn', e.target.value)} placeholder="13자리 ISBN" maxLength={13} />
+              <input style={s.input(errors.isbn)} value={form.isbn} onChange={(e) => set('isbn', e.target.value)} placeholder="13자리 ISBN" maxLength={13} />
+              {errors.isbn && <div style={s.errMsg}><i className="ti ti-alert-circle" style={{ fontSize: 13 }} />{errors.isbn}</div>}
             </div>
           </div>
 
@@ -326,39 +343,6 @@ export default function BookFormPage({ mode, id, onBack, onSaved }) {
               <div style={s.sectionTitle}>
                 <i className="ti ti-wand" /> AI 표지 생성
                 <span style={{ fontSize: 11, fontWeight: 400, marginLeft: 4 }}>(선택)</span>
-              </div>
-
-              {/* 5. AI 모델 선택 버튼 렌더링 */}
-              <div style={s.formGroup}>
-                <label style={s.label}>AI 모델</label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {['gpt-image-2', 'gpt-image-1', 'dall-e-3'].map((model) => (
-                    <button key={model} onClick={() => handleModelChange(model)}
-                      style={{ padding: '4px 10px', borderRadius: 20, fontSize: 12, cursor: 'pointer', border: `0.5px solid ${apiConfig.model === model ? '#1a1a18' : 'rgba(0,0,0,0.22)'}`, background: apiConfig.model === model ? '#1a1a18' : '#fff', color: apiConfig.model === model ? '#fff' : '#1a1a18' }}>
-                      {model === 'gpt-image-2' ? 'GPT Image 2' : 
-                       model === 'gpt-image-1' ? 'GPT Image 1' : 'DALL-E 3'}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* 6. 이미지 퀄리티 선택 버튼 렌더링 */}
-              <div style={s.formGroup}>
-                <label style={s.label}>이미지 퀄리티</label>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {['Low', 'Medium', 'High'].map((q) => (
-                    <button key={q} onClick={() => {
-                        if (apiConfig.model === 'dall-e-3' && q !== 'High') {
-                          alert('DALL-E 3 모델은 고품질 모델이므로 High 퀄리티만 선택 가능합니다.');
-                          return;
-                        }
-                        setApiConfig((p) => ({ ...p, quality: q }))
-                      }}
-                      style={{ padding: '4px 10px', borderRadius: 20, fontSize: 12, cursor: 'pointer', border: `0.5px solid ${apiConfig.quality === q ? '#1a1a18' : 'rgba(0,0,0,0.22)'}`, background: apiConfig.quality === q ? '#1a1a18' : '#fff', color: apiConfig.quality === q ? '#fff' : '#1a1a18' }}>
-                      {q}
-                    </button>
-                  ))}
-                </div>
               </div>
 
               <div style={s.formGroup}>
